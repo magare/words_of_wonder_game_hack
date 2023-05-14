@@ -8,7 +8,7 @@ describe("WordGridComponent", () => {
       ["a", "p", "p", "l", "e"],
       ["b", "a", "n", "a", "n", "a"],
     ];
-    render(<WordGridComponent grid={grid} />);
+    render(<WordGridComponent grid={grid as any} />);
 
     const headingElement = screen.getByRole("heading", { level: 2 });
     const tableElement = screen.getByRole("table");
@@ -23,7 +23,7 @@ describe("WordGridComponent", () => {
 
   test("renders correctly without grid", () => {
     const grid: string[][] = [];
-    render(<WordGridComponent grid={grid} />);
+    render(<WordGridComponent grid={grid as any} />);
 
     const headingElement = screen.getByRole("heading", { level: 2 });
     const tableElement = screen.queryByRole("table");

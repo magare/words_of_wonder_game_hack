@@ -1,20 +1,19 @@
-import React from 'react';
+import React from "react";
 
 interface WordGridProps {
   grid: string[][];
 }
 
 const WordGridComponent: React.FC<WordGridProps> = ({ grid }) => {
+  const arrayFromGrid = Array.from(grid);
   return (
     <div>
       <h2>Word Grid:</h2>
       <table>
         <tbody>
-          {grid.map((row, rowIndex) => (
+          {arrayFromGrid.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              {row.map((col, colIndex) => (
-                <td key={colIndex}>{col}</td>
-              ))}
+              {row.map((col, colIndex) => col && <td key={colIndex}>{col}</td>)}
             </tr>
           ))}
         </tbody>

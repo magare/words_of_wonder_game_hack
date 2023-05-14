@@ -1,16 +1,41 @@
-import React, { ChangeEvent, useState } from 'react';
-import GeneratedWordsComponent from '../Components/generated-words/generated-words';
-import LetterInputComponent from '../Components/letter-input/letter-input';
-import WordCountComponent from '../Components/word-count/word-count';
-import WordGridComponent from '../Components/word-grid/word-grid';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import WebFont from "webfontloader";
+import GeneratedWordsComponent from "../Components/generated-words/generated-words";
+import LetterInputComponent from "../Components/letter-input/letter-input";
+import WordCountComponent from "../Components/word-count/word-count";
+import WordGridComponent from "../Components/word-grid/word-grid";
+import { generateGrid } from "../services/generateGrid";
+import { getWords } from "../services/generateWords";
+import "./App.css";
 
 const App: React.FC = () => {
-  const [letters, setLetters] = useState('');
+  const [letters, setLetters] = useState("");
   const [wordCount, setWordCount] = useState(0);
   const [generatedWords, setGeneratedWords] = useState<string[][]>([]);
   const [wordGrid, setWordGrid] = useState<string[][]>([]);
+  const [allWords, setAllWords] = useState<string[]>([]);
+
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ["Courier New"],
+      },
+    });
+  }, []);
+
+  const getWordGrid = () => {};
+
+  const getNLengthWords = () => {
+    const map: { [key: number | string]: number } = {};
+    allWords.forEach((i: string) => {
+      map[i] = i.length;
+    });
+
+    return map;
+  };
 
   const handleLetterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("value", event.target.value);
     setLetters(event.target.value);
   };
 
@@ -18,30 +43,61 @@ const App: React.FC = () => {
     setWordCount(parseInt(event.target.value, 10));
   };
 
-  const generateWords = () => {
-    // Implement your logic to generate words based on letters and word count
-    // Set the generated words and word grid using setGeneratedWords and setWordGrid
-    // For example:
-    const mockGeneratedWords: string[][] = [['word1', 'word2'], ['word3']];
-    setGeneratedWords(mockGeneratedWords);
+  const generateWords = async () => {
+    await setAllWords(getWords(letters));
+  };
 
-    const mockWordGrid: string[][] = [['w', 'o', 'r', 'd'], ['1', '2', '3', '4']];
-    setWordGrid(mockWordGrid);
+  const generateWordGrid = () => {
+    const grid = generateGrid(allWords, getNLengthWords());
+    setWordGrid(grid);
+  };
+
+  const groupWordsByLength = (words: string[]): string[][] => {
+    const maxLength = Math.max(...words.map((word) => word.length));
+    let groupedWords: string[][] = Array.from(
+      { length: maxLength + 1 },
+      () => []
+    );
+
+    for (const word of words) {
+      const wordLength = word.length;
+      groupedWords[wordLength].push(word);
+    }
+
+    groupedWords = groupedWords.filter((i) => i.length);
+
+    const uniqueArrays: any[][] = [];
+
+    for (const innerArray of groupedWords) {
+      const uniqueElements: any[] = Array.from(new Set(innerArray));
+      uniqueArrays.push(uniqueElements);
+    }
+
+    return uniqueArrays;
   };
 
   const showGeneratedWords = generatedWords.length > 0;
   const showWordGrid = wordGrid.length > 0;
 
   return (
-    <div>
-      <LetterInputComponent onChange={handleLetterChange} />
-      <WordCountComponent onChange={handleWordCountChange} />
-      <button onClick={generateWords}>Generate Words</button>
-      {showGeneratedWords && <GeneratedWordsComponent words={generatedWords} />}
-      {showWordGrid && <WordGridComponent grid={wordGrid} />}
+    <div className="main-container">
+      <div className="app-container">
+        <LetterInputComponent onChange={handleLetterChange} />
+        {/* <WordCountComponent onChange={handleWordCountChange} /> */}
+        <button onClick={generateWords}>Generate Words</button>
+        <button onClick={generateWordGrid}>Generate Grid</button>
 
+        {showWordGrid && <WordGridComponent grid={wordGrid} />}
+        {!showWordGrid && <>{"No grid to show"}</>}
+      </div>
+      <div className="word-grid">
+        {allWords.length > 0 && (
+          <GeneratedWordsComponent words={groupWordsByLength(allWords)} />
+        )}
+      </div>
     </div>
   );
 };
 
 export default App;
+
