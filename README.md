@@ -2,8 +2,6 @@
 
 🔠 WordGrid Master: Unleash Your Linguistic Prowess on the Word Grid! 💡
 
-🔠 WordGrid Master: Unleash Your Linguistic Prowess on the Word Grid! 💡
-
 Welcome to WordGrid Master, where words meet grids in an ultimate word puzzle experience! 🎮
 
 This repository is dedicated to empowering word enthusiasts like you to conquer the challenging realm of word grids with finesse and creativity. 🚀 Discover the perfect synergy between letters and grids as you embark on a journey to conquer mind-bending word puzzles. 💪
