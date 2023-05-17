@@ -1,19 +1,26 @@
 import React from "react";
+import "./word-grid.css";
 
 interface WordGridProps {
   grid: string[][];
 }
 
 const WordGridComponent: React.FC<WordGridProps> = ({ grid }) => {
-  const arrayFromGrid = Array.from(grid);
   return (
     <div>
       <h2>Word Grid:</h2>
-      <table>
+      <table className="word-grid-table">
         <tbody>
-          {arrayFromGrid.map((row, rowIndex) => (
+          {grid.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              {row.map((col, colIndex) => col && <td key={colIndex}>{col}</td>)}
+              {row.map((col, colIndex) => (
+                <td
+                  key={colIndex}
+                  className={`grid-cell ${col.trim() ? "non-empty" : "empty"}`}
+                >
+                  {col}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>

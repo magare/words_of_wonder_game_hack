@@ -2,18 +2,20 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import WebFont from "webfontloader";
 import GeneratedWordsComponent from "../Components/generated-words/generated-words";
 import LetterInputComponent from "../Components/letter-input/letter-input";
-import WordCountComponent from "../Components/word-count/word-count";
 import WordGridComponent from "../Components/word-grid/word-grid";
+import { generateGridWithTrie } from "../services/generateGridWithTrie";
 import { generateGrid } from "../services/generateGrid";
 import { getWords } from "../services/generateWords";
+
 import "./App.css";
 
 const App: React.FC = () => {
   const [letters, setLetters] = useState("");
-  const [wordCount, setWordCount] = useState(0);
-  const [generatedWords, setGeneratedWords] = useState<string[][]>([]);
   const [wordGrid, setWordGrid] = useState<string[][]>([]);
   const [allWords, setAllWords] = useState<string[]>([]);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<
+    "default" | "trie"
+  >("default");
 
   useEffect(() => {
     WebFont.load({
@@ -23,32 +25,31 @@ const App: React.FC = () => {
     });
   }, []);
 
-  const getWordGrid = () => {};
-
   const getNLengthWords = () => {
-    const map: { [key: number | string]: number } = {};
-    allWords.forEach((i: string) => {
-      map[i] = i.length;
+    const map: { [key: string]: number } = {};
+    allWords.forEach((word) => {
+      map[word] = word.length;
     });
 
     return map;
   };
 
   const handleLetterChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("value", event.target.value);
     setLetters(event.target.value);
   };
 
-  const handleWordCountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setWordCount(parseInt(event.target.value, 10));
-  };
-
-  const generateWords = async () => {
-    await setAllWords(getWords(letters));
+  const generateWords = () => {
+    const words = getWords(letters);
+    setAllWords(words);
   };
 
   const generateWordGrid = () => {
     const grid = generateGrid(allWords, getNLengthWords());
+    setWordGrid(grid);
+  };
+
+  const generateWordGridWithTrie = () => {
+    const grid = generateGridWithTrie(allWords);
     setWordGrid(grid);
   };
 
@@ -64,33 +65,66 @@ const App: React.FC = () => {
       groupedWords[wordLength].push(word);
     }
 
-    groupedWords = groupedWords.filter((i) => i.length);
+    groupedWords = groupedWords.filter((array) => array.length);
 
-    const uniqueArrays: any[][] = [];
+    const uniqueArrays: string[][] = [];
 
     for (const innerArray of groupedWords) {
-      const uniqueElements: any[] = Array.from(new Set(innerArray));
+      const uniqueElements: string[] = Array.from(new Set(innerArray));
       uniqueArrays.push(uniqueElements);
     }
 
     return uniqueArrays;
   };
 
-  const showGeneratedWords = generatedWords.length > 0;
   const showWordGrid = wordGrid.length > 0;
+
+  const handleAlgorithmChange = (event: any) =>
+    setSelectedAlgorithm(event.target.value);
 
   return (
     <div className="main-container">
       <div className="app-container">
         <LetterInputComponent onChange={handleLetterChange} />
-        {/* <WordCountComponent onChange={handleWordCountChange} /> */}
         <button onClick={generateWords}>Generate Words</button>
-        <button onClick={generateWordGrid}>Generate Grid</button>
+        {!!allWords.length && (
+          <>
+            <button
+              onClick={() => {
+                if (selectedAlgorithm === "default") generateWordGrid();
+                else generateWordGridWithTrie();
+              }}
+            >
+              Generate Grid
+            </button>
+            <label>
+              <input
+                type="radio"
+                value="default"
+                checked={selectedAlgorithm === "default"}
+                onChange={handleAlgorithmChange}
+              />
+              Default Algorithm
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="trie"
+                checked={selectedAlgorithm === "trie"}
+                onChange={handleAlgorithmChange}
+              />
+              Trie Algorithm
+            </label>
+          </>
+        )}
 
-        {showWordGrid && <WordGridComponent grid={wordGrid} />}
-        {!showWordGrid && <>{"No grid to show"}</>}
+        {showWordGrid ? (
+          <WordGridComponent grid={wordGrid} />
+        ) : (
+          <p>No grid to show</p>
+        )}
       </div>
-      <div className="word-grid">
+      <div className="word-grid-container">
         {allWords.length > 0 && (
           <GeneratedWordsComponent words={groupWordsByLength(allWords)} />
         )}
@@ -100,4 +134,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

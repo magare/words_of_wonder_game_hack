@@ -12,7 +12,6 @@ const WordCountComponent: React.FC<WordCountProps> = ({ onChange }) => {
     const newInputs = [...inputs];
     newInputs[index] = value;
     setInputs(newInputs);
-    // onChange(value);
   };
 
   const handleBlur = () => {
@@ -37,8 +36,3 @@ const WordCountComponent: React.FC<WordCountProps> = ({ onChange }) => {
 
 export default WordCountComponent;
 
-// const [wordLengthIndex, setWordLengthIndex] = useState(3)
-
-// const handleWordLengthChange = () => {
-
-// }

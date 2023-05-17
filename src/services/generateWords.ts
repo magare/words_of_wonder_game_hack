@@ -1,7 +1,7 @@
 import wordList from "./wordList.json";
 
 // Function to check if a word can be formed using given letters
-const isWordPossible = (word :string, letters: string) => {
+const isWordPossible = (word: string, letters: string) => {
   const lettersMap = new Map();
   for (const letter of letters) {
     lettersMap.set(letter, (lettersMap.get(letter) || 0) + 1);
@@ -29,4 +29,3 @@ const findValidWords = (letters: string, wordList: Array<string>) => {
 export const getWords = (letters: string) => {
   return findValidWords(letters, wordList);
 };
-

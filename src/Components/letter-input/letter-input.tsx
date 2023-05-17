@@ -4,7 +4,7 @@ interface InputProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-function handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
+const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>): void => {
   const keyCode = event.keyCode || event.which;
   const key = String.fromCharCode(keyCode);
   const regex = /^[A-Za-z]+$/;
@@ -12,7 +12,7 @@ function handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
   if (!regex.test(key)) {
     event.preventDefault();
   }
-}
+};
 
 const LetterInputComponent: React.FC<InputProps> = ({ onChange }) => {
   return (

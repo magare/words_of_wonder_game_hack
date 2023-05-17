@@ -1,0 +1,36 @@
+.word-grid-table {
+    border-collapse: separate;
+    border-spacing: 4px;
+  }
+  
+  .grid-cell {
+    padding: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .grid-cell.non-empty {
+    border: 1px solid gold;
+    width: 0;
+    height: 0;
+    padding: 2px;
+  }
+  
+  .grid-cell:hover:not(.empty) {
+    background-color: gold;
+    color: black;
+  }
+  
+  /* Additional styles to highlight entire word on hover */
+  
+  .grid-cell.highlight {
+    background-color: gold;
+  }
+  
+  .grid-cell.highlight:first-child {
+    border-top-left-radius: 8px;
+  }
+  
+  .grid-cell.highlight:last-child {
+    border-bottom-right-radius: 8px;
+  }
+  

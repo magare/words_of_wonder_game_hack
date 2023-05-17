@@ -3,6 +3,8 @@ export type Cell = {
   orientation: "horizontal" | "vertical" | null;
 };
 
+type Array2D = string[][];
+
 type Position = {
   row: number;
   col: number;
@@ -22,7 +24,7 @@ export function generateGrid(
 
   const wordLengthCounts: { [key: number]: number } = {};
 
-  const firstWord = words.length ? words.shift() : '';
+  const firstWord = words.length ? words.shift() : "";
   insertHorizontally(
     grid,
     firstWord!,
@@ -69,17 +71,13 @@ export function generateGrid(
       wordLengthCounts[wordLength] = (wordLengthCounts[wordLength] || 0) + 1;
     }
   }
-  console.log(grid);
 
-  for (let row of grid) {
-    console.log(row.map((cell) => cell.letter).join(" "));
-  }
 
   let stringGrid: string[][] = grid.map((row) =>
     row.map((cell) => cell.letter)
   );
 
-  return stringGrid;
+  return trimSparseArray(stringGrid);
 }
 
 function insertHorizontally(
@@ -141,25 +139,56 @@ function canInsertVertically(
 }
 
 function countOverlaps(
-  grid: Cell[][],
-  word: string,
-  row: number,
-  col: number,
-  orientation: "horizontal" | "vertical"
+    grid: Cell[][],
+    word: string,
+    row: number,
+    col: number,
+    orientation: "horizontal" | "vertical"
 ): number {
-  if (
-    (orientation === "horizontal" &&
-      !canInsertHorizontally(grid, word, row, col)) ||
-    (orientation === "vertical" && !canInsertVertically(grid, word, row, col))
-  ) {
-    return 0;
-  }
+    if (
+        (orientation === "horizontal" &&
+        !canInsertHorizontally(grid, word, row, col)) ||
+        (orientation === "vertical" && !canInsertVertically(grid, word, row, col))
+    ) {
+        return 0;
+    }
 
-  let overlap = 0;
-  for (let i = 0; i < word.length; i++) {
-    const cell =
-      orientation === "horizontal" ? grid[row][col + i] : grid[row + i][col];
-    if (cell.letter === word[i]) overlap++;
-  }
-  return overlap;
+    let overlap = 0;
+    if (orientation === "horizontal") {
+        for (let i = 0; i < word.length; i++) {
+            const cell = grid[row][col + i];
+            if (cell.letter === word[i]) overlap++;
+        }
+    } else {
+        for (let i = 0; i < word.length; i++) {
+            const cell = grid[row + i][col];
+            if (cell.letter === word[i]) overlap++;
+        }
+    }
+    return overlap;
 }
+
+
+function trimSparseArray(arr: Array2D): Array2D {
+    let top = arr.length, bottom = 0, left = arr[0].length, right = 0;
+
+    for(let i = 0; i < arr.length; i++) {
+        for(let j = 0; j < arr[i].length; j++) {
+            if(arr[i][j] !== " ") {
+                top = Math.min(top, i);
+                bottom = Math.max(bottom, i);
+                left = Math.min(left, j);
+                right = Math.max(right, j);
+            }
+        }
+    }
+
+    let trimmed: Array2D = [];
+
+    for(let i = top; i <= bottom; i++) {
+        trimmed.push(arr[i].slice(left, right + 1));
+    }
+
+    return trimmed;
+}
+

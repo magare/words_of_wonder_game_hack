@@ -9,17 +9,18 @@ const GeneratedWordsComponent: React.FC<GeneratedWordsProps> = ({ words }) => {
 
   useEffect(() => {
     const timeoutIds: NodeJS.Timeout[][] = words.map((word, index) => {
-      const letters: string[] = [];
       let delay = 0;
 
       const wordTimeoutIds: NodeJS.Timeout[] = word.map((letter) => {
         delay += 0; // Adjust the delay time per letter here (200 milliseconds in this example)
 
         return setTimeout(() => {
-          letters.push(letter);
           setRenderedWords((prevWords) => {
             const updatedWords = [...prevWords];
-            updatedWords[index] = letters;
+            updatedWords[index] = [
+              ...word.slice(0, updatedWords[index]?.length || 0),
+              letter,
+            ];
             return updatedWords;
           });
         }, delay);
