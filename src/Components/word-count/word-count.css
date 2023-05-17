@@ -1,0 +1,4 @@
+.word-length-input-container {
+  max-width: 70%;
+  flex-wrap: wrap;
+}
