@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/words_of_wonder_game_hack/static/css/main.744db05a.css",
+    "main.js": "/words_of_wonder_game_hack/static/js/main.a2ac90da.js",
+    "static/js/787.a0907da2.chunk.js": "/words_of_wonder_game_hack/static/js/787.a0907da2.chunk.js",
+    "index.html": "/words_of_wonder_game_hack/index.html",
+    "main.744db05a.css.map": "/words_of_wonder_game_hack/static/css/main.744db05a.css.map",
+    "main.a2ac90da.js.map": "/words_of_wonder_game_hack/static/js/main.a2ac90da.js.map",
+    "787.a0907da2.chunk.js.map": "/words_of_wonder_game_hack/static/js/787.a0907da2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.744db05a.css",
+    "static/js/main.a2ac90da.js"
+  ]
+}
